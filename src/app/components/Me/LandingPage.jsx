@@ -204,18 +204,13 @@ export default function LandingPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-
     
       <div className="flex flex-col lg:flex-row justify-center lg:justify-start">
         <div className="ml-5 lg:mr-5 border border-md  w-full lg:w-1/2 rounded-lg my-5 justify-center text-center pb-5 shadow-lg">
-
-      <div className="flex flex-col lg:flex-row justify-center lg:justify-start mx-5">
-        <div className="border border-md w-full lg:mr-5 lg:w-1/2 mt-5 lg:mb-5 justify-center text-center pb-5 shadow-lg rounded-lg">
-
           <h1 className="text-5xl font-bold mt-10">Welcome Back</h1>
-          <div className="avatar placeholder my-8">
-            <div className="bg-purple-600 text-white rounded-full w-24">
-              <span className="text-5xl">D</span>
+          <div class="avatar placeholder my-8">
+            <div class="bg-purple-600 text-white rounded-full w-24">
+              <span class="text-5xl">D</span>
             </div>
           </div>
           <div className="">
@@ -226,13 +221,13 @@ export default function LandingPage() {
           <h1 className="btn btn-ghost ">Edit Profile</h1>
         </div>
 
-        <div className="border border-md w-full lg:w-screen my-5 shadow-lg lg:flex lg:flex-row rounded-lg ">
-          <div className="border border-md m-5 rounded-lg bg-blue-500 lg:w-1/2">
+        <div className="border border-md w-full lg:w-screen rounded-lg my-5 shadow-lg flex flex-col lg:flex-row">
+          <div className="border border-md m-5 rounded-lg bg-blue-500 w-full lg:w-1/2">
             <h1 className="text-xl mx-3 mt-5 text-white">Administrator</h1>
             <h1 className="ml-3 text-3xl text-white">123456789</h1>
             <div className="rounded-md m-3 bg-blue-400 text-white">
               <h1 className="ml-2">Absen Masuk</h1>
-                <div className="flex">
+              <div className="flex">
                 <h1 className="ml-2 text-5xl mb-2 pb-2">07.00</h1>
                 <h1 className="mt-5 ml-1 text-xl">Senin, 2/4/2024</h1>
               </div>
@@ -246,7 +241,7 @@ export default function LandingPage() {
             </div>
             <div className="flex justify-center">
               <button
-                className="mt-4 mb-6 lg:mt-2.5 lg:mb-0 btn border-0 bg-white text-black md:w-5/6 lg:w-1/2 rounded-md hover:bg-white hover:text-black text-lg"
+                className="mt-2.5 btn border-0 bg-white text-black w-full lg:w-1/2 rounded-md hover:bg-white hover:text-black text-lg"
                 onClick={onOpen}
               >
                 Absen
@@ -254,9 +249,9 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="border border-md m-5 lg:ml-0 rounded-lg lg:w-1/2 bg-blue-500">
+          <div className="border border-md my-5 mr-5 rounded-lg w-full lg:w-1/2 bg-blue-500">
             <div className="justify-center mt-5 flex text-center rounded-lg">
-              <div className="bg-white w-1/3 p-2 rounded-lg">
+              <div className="bg-white w-1/4 p-2 rounded-lg">
                 <h1>Jarak dari kantor</h1>
                 <h1 className="font-bold text-2xl">200 Km</h1>
               </div>
@@ -278,18 +273,15 @@ export default function LandingPage() {
             <div class="stat-figure text-secondary"></div>
             <div class="stat-title">Jam Masuk</div>
             <div class="stat-value text-xl"> {absen.check_in}</div>
-            <div class="stat-value text-large sm:text-xl md:text-xl lg:text-xl xl:text-xl">2024-02-08T06:31:19+07:00</div>
           </div>
           <div className="stat place-items-center">
             <div class="stat-figure text-secondary"></div>
             <div class="stat-title">Jam Keluar</div>
             <div class="stat-value text-xl"> {absen.check_out}</div>
-            <div class="stat-value text-large sm:text-xl md:text-xl lg:text-xl xl:text-xl">2024-02-08T15:54:05+07:00</div>
             <div class="stat-figure text-secondary"></div>
           </div>
         </div>
       </div>
-
 </div>
       ))}
       <Link
@@ -298,31 +290,6 @@ export default function LandingPage() {
       >
         Show More
       </Link>
-      <div class="border border-md shadow-md rounded-md mx-5 mb-5">
-        <div className="lg:flex">
-          <div className="stat place-items-center">
-            <div class="stat-figure text-secondary"></div>
-            <div class="stat-title">Jam Masuk</div>
-            <div class="stat-value text-large sm:text-xl md:text-xl lg:text-xl xl:text-xl">2024-02-08T06:31:19+07:00</div>
-          </div>
-          <div className="stat place-items-center">
-            <div class="stat-figure text-secondary"></div>
-            <div class="stat-title">Jam Keluar</div>
-            <div class="stat-value text-large sm:text-xl md:text-xl lg:text-xl xl:text-xl">2024-02-08T15:54:05+07:00</div>
-            <div class="stat-figure text-secondary"></div>
-          </div>
-          <div class="stat-desc m-3">Monday, January 9, 2024</div>
-        </div>
-      </div>
-
-      <div className="">
-        <Link
-          href="/me/statistik"
-          className="text-lg text-blue-500 hover:text-white hover:bg-blue-500 mb-28 lg:mb-16 md:mb-16 xl:mb-16 btn flex justify-center mx-5"
-        >
-          Lihat Lebih Banyak
-        </Link>
-      </div>
 
       <Modal size={size} isOpen={isOpen} onClose={onClose}>
         <ModalContent>
