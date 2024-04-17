@@ -94,15 +94,15 @@ function handleDidnHave() {
         <div className="shadow-lg">
           <div className="card w-96 bg-white shadow-xl rounded-lg overflow-hidden">
             <div className="card-body p-6">
-              <h2 className="card-title text-3xl font-bold mb-4 text-purple-800">
+              <h2 className="card-title text-3xl font-bold mb-4 text-blue-500">
                 Login for an Account
               </h2>
-              <hr className="mb-4 border-purple-400" />
+              <hr className="mb-4 border-blue-500" />
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label
                     htmlFor="email"
-                    className="text-lg font-medium text-purple-800"
+                    className="text-lg font-medium text-blue-500"
                   >
                     Email:
                   </label>
@@ -115,13 +115,13 @@ function handleDidnHave() {
                     id="email"
                     name="email"
                     placeholder="Arienesu@gmail.com"
-                    className="input input-bordered w-full mt-1 text-purple-800"
+                    className="input input-bordered w-full mt-1 text-blue-500"
                   />
                 </div>
                 <div className="mb-4">
                   <label
                     htmlFor="password"
-                    className="text-lg font-medium text-purple-800"
+                    className="text-lg font-medium text-blue-500"
                   >
                     Password:
                   </label>
@@ -134,14 +134,14 @@ function handleDidnHave() {
                     id="password"
                     name="password"
                     placeholder="ArienaKawaii"
-                    className="input input-bordered w-full mt-1 text-purple-800"
+                    className="input input-bordered w-full mt-1 text-blue-500"
                   />
                 </div>
 
                 <div className="text-center mt-8">
                   <button
                     type="submit"
-                    className="btn btn-primary w-full bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 text-white"
+                    className="btn btn-primary w-full bg-blue-500 hover:bg-blue-700 focus:ring-blue-600 text-white"
                   >
                    {isSubmit ? "TEST" : "Login"}
                   </button>
@@ -150,7 +150,7 @@ function handleDidnHave() {
               <div className="mt-3 text-center">
                 <button
                   onClick={handleDidnHave}
-                  className=" link font-medium text-indigo-600"
+                  className=" link font-medium text-sky-600"
                 >
                   Didn't have an Account?..
                 </button>

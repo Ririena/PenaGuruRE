@@ -48,7 +48,7 @@ const ScrollToTop = () => {
         fill="none"
         stroke="currentColor"
       >
-        {showTopBtn && (
+        {/* {showTopBtn && (
           <button
             aria-label="Scroll To Top"
             type="button"
@@ -63,7 +63,7 @@ const ScrollToTop = () => {
               ></path>
             </svg>
           </button>
-        )}
+        )} */}
       </div>
       {/* tess 124421*/}
     </>

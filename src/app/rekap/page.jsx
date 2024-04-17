@@ -1,7 +1,14 @@
-"use client";
-import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
-import { supabase } from "../config/supabase";
+
+
+'use client'
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { supabase } from '../config/supabase';
+import Rekap from '../components/Rekap/Rekap';
+
+
+import { Suspense } from "react";
+
 import {
   Card,
   CardHeader,
@@ -11,8 +18,8 @@ import {
 } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import { Grid } from "@nextui-org/react";
-import Rekap from "../components/Rekap/Rekap";
 import Loading from "./loading";
+
 export default function RekapPage() {
   const [uniqueDates, setUniqueDates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +56,11 @@ export default function RekapPage() {
   }
 
   return (
+
+   <>
+   <Rekap/>
+   </>
+
     <div>
       <h1 className="font-bold text-center text-3xl sm:text-5xl mb-5 mt-3">
         Rekap Absensi
@@ -74,8 +86,8 @@ export default function RekapPage() {
         ))}
       </ul>
     </div>
+
   );
 
 }
 
-}

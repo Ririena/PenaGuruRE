@@ -6,7 +6,7 @@ import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody,    
+  ModalBody,
   ModalFooter,
   Button,
   useDisclosure,
@@ -16,6 +16,8 @@ import Link from "next/link";
 import { startOfDay, setHours, format } from "date-fns";
 import { supabase } from "../../config/supabase";
 import { toast } from "react-toastify";
+import Image from "next/image";
+import PenaGuru from "../../../../public/PenaGuru.png";
 export default function LandingPage() {
   const [userData, setUserData] = useState({
     nama_user: "",
@@ -28,6 +30,33 @@ export default function LandingPage() {
   const [user, setUser] = useState(null);
   const [absensi, setAbsensi] = useState([]);
   const toast = useToast();
+  const now = new Date();
+  const today = format(now, "yyyy-MM-dd");
+  const checkInTime = setHours(startOfDay(now), 7);
+  let checkOutTime;
+
+  switch (now.getDay()) {
+    case 1:
+      checkOutTime = setHours(startOfDay(now), 15, 10);
+      break;
+    case 2:
+      checkOutTime = setHours(startOfDay(now), 15, 50);
+      break;
+    case 3:
+    case 4:
+      checkOutTime = setHours(startOfDay(now), 14, 30);
+      break;
+    case 5:
+      checkOutTime = setHours(startOfDay(now), 11, 30);
+      break;
+    case 6:
+      checkOutTime = setHours(startOfDay(now), 9, 10);
+      break;
+    default:
+      checkOutTime = null;
+      break;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -195,10 +224,6 @@ export default function LandingPage() {
       console.error("Error handling check-out:", error.message);
     }
   };
-
-   
-
-     
   // presensiData && presensiData.check_in ?(
   //   toast({
   //     title: "Anda sudah Absen",
@@ -228,25 +253,77 @@ export default function LandingPage() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      {presensiData && presensiData.check_in ? (
-        <></>
+      {now < checkInTime ? (
+        <>
+          {presensiData && presensiData.check_in ? (
+            <></>
+          ) : (
+            <>
+              <div className="fixed  top-2 right-0  p-16 ">
+                <div class="  p-4 mb-4 bg-red-500 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+                  <p>Silahkan CheckIn</p>
+                </div>
+              </div>
+            </>
+          )}
+        </>
       ) : (
         <>
-          <div className="fixed  top-2 right-0  p-16 ">
-            <div class=" w-full max-w-xs p-4 mb-4 bg-red-500 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
-              <p>Silahkan CheckIn</p>
-            </div>
-          </div>
+          {presensiData && presensiData.check_in ? (
+            <>
+              {now > checkOutTime ? (
+                <>
+                  {presensiData && presensiData.check_out ? (
+                    <></>
+                  ) : (
+                    <>
+                      <div className="fixed  top-2 right-0  p-16 ">
+                        <div class="  p-4 mb-4 bg-red-500 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+                          <p>Anda belum checkout </p>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="fixed  top-2 right-0  p-16 ">
+                    <div class="  p-4 mb-4 bg-red-500 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+                      <p>Belum Waktunya checkout</p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              { now > checkOutTime ?(
+              <>
+
+              </>):
+              (
+              <>
+              <div className="fixed  top-2 right-0  p-16 ">
+                <div class="  p-4 mb-4 bg-red-500 text-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800">
+                  <p>Anda Terlambat Absen</p>
+                </div>
+              </div>
+
+              </>
+              )}
+            </>
+          )}
         </>
       )}
       <div className="flex flex-col lg:flex-row justify-center lg:justify-start mx-5">
         <div className="border border-md w-full lg:mr-5 lg:w-1/2 mt-5 lg:mb-5 justify-center text-center pb-5 shadow-lg rounded-lg">
           <h1 className="text-5xl font-bold mt-10">Welcome Back</h1>
-          <div class="avatar placeholder my-8">
-            <div class="bg-purple-600 text-white rounded-full w-24">
-              <span class="text-5xl">D</span>
-            </div>
-          </div>
+          <Image
+            src={PenaGuru}
+            width={70}
+            height={70}
+            className="mx-auto my-8"
+          />
           <div className="">
             <h1 className="text-2xl">{userData.email}</h1>
             <h1 className="mb-2">({userData.nama_user})</h1>
@@ -259,6 +336,20 @@ export default function LandingPage() {
           <div className="border border-md m-5 rounded-lg bg-blue-500 lg:w-1/2">
             <h1 className="text-xl mx-3 mt-5 text-white">Administrator</h1>
             <h1 className="ml-3 text-3xl text-white">123456789</h1>
+            <div className="rounded-md m-3 bg-blue-400 text-white">
+              <h1 className="ml-2">Absen Masuk</h1>
+              <div className="flex">
+                <h1 className="ml-2 text-5xl mb-2 pb-2">07.00</h1>
+                <h1 className="mt-5 ml-1 text-xl">Senin, 2/4/2024</h1>
+              </div>
+            </div>
+            <div className="rounded-md m-3 bg-blue-400 text-white">
+              <h1 className="ml-2">Absen Keluar</h1>
+              <div className="flex">
+                <h1 className="ml-2 text-5xl pb-2">15.30</h1>
+                <h1 className="mt-5 ml-1 text-xl">Senin, 2/4/2024</h1>
+              </div>
+            </div>
             <div className="flex justify-center">
               <button
                 className="mt-4 mb-6 lg:mt-2.5 lg:mb-0 btn border-0 bg-white text-black md:w-5/6 lg:w-1/2 rounded-md hover:bg-white hover:text-black text-lg"
@@ -373,6 +464,6 @@ export default function LandingPage() {
           )}
         </ModalContent>
       </Modal>
-    </>           
+    </>
   );
 }

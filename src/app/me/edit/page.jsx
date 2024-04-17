@@ -13,6 +13,7 @@ import {
   Divider,
   Link,
   Image,
+  Avatar,
 } from "@nextui-org/react";
 import {
   faCoffee,
@@ -27,17 +28,15 @@ import {
 // import User from "../../middleware/user"
 import UserAuth from "../../middleware/user";
 
-
 export default function EditProfile() {
   const [userEmail, setUserEmail] = useState(null);
-  const [jurusanOptions, setJurusanOptions] = useState([]);
   const [userData, setUserData] = useState({
     jenis_user: "",
-    jurusan: "",
     kelas: "",
     nama_user: "",
     avatar: "",
-    motto: "",
+    telepon: "",
+    alamat: "",
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarUrl, setAvatarUrl] = useState(null);
@@ -60,28 +59,6 @@ export default function EditProfile() {
     }
   }
 
-  useEffect(() => {
-    const fetchJurusanOptions = async () => {
-      try {
-        const { data: jurusanData, error: jurusanError } = await supabase
-          .from("jurusan")
-          .select("id, nama_jurusan");
-
-        if (jurusanError) {
-          console.error(
-            "Error fetching jurusan options:",
-            jurusanError.message
-          );
-        } else {
-          setJurusanOptions(jurusanData);
-        }
-      } catch (error) {
-        console.error("Error fetching jurusan options:", error.message);
-      }
-    };
-
-    fetchJurusanOptions();
-  }, []);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -133,10 +110,6 @@ export default function EditProfile() {
 
       if (userType === "Guru") {
         tableName = "gurus";
-      } else if (userType === "Staff") {
-        tableName = "staffs";
-      } else if (userType === "Admin") {
-        tableName = "admins";
       }
 
       const { error } = await supabase.from("profiles").upsert({
@@ -163,10 +136,6 @@ export default function EditProfile() {
 
       if (userType === "Guru") {
         tableName = "gurus";
-      } else if (userType === "Staff") {
-        tableName = "staffs";
-      } else if (userType === "Admin") {
-        tableName = "admins";
       }
 
       // Update profile
@@ -224,104 +193,44 @@ export default function EditProfile() {
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
+    if (file) {
+      try {
+        const avatarFileName = uuidv4();
+        const { data, error } = await supabase.storage
+          .from("gambar")
+          .upload(avatarFileName, file, { cacheControl: "3600" });
+        if (error) {
+          throw error;
+        }
+        const avatarUrl = data.publicURL;
+        setAvatarUrl(avatarUrl);
 
-    try {
-      const folder = "gambar";
-      const filename = `${uuidv4()}-${file.name}`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from(folder)
-        .upload(`${filename}`, file);
-
-      if (uploadError) {
-        throw uploadError;
+        await supabase
+          .from("profiles")
+          .update({ avatar: avatarFileName })
+          .eq("email", userEmail);
+      } catch (error) {
+        console.error("Error updating avatar:", error.message);
       }
-
-      setUserData((prevData) => ({
-        ...prevData,
-        avatar: filename,
-      }));
-
-      setAvatarUrl(uploadData.publicURL);
-    } catch (error) {
-      console.error("ERROR UPLOADING AVATAR", error.message);
     }
   };
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    
-
     const updatedFields = {};
 
-    if (userData.userType) {
-      updatedFields.userType = userData.userType;
-    }
-
-    if (userData.avatar) {
-      updatedFields.avatar = userData.avatar;
-    }
-
-    if (userData.jenis_user !== "") {
-      updatedFields.jenis_user = userData.jenis_user;
-    }
-
-    if (userData.jurusan !== "") {
-      // Find the selected jurusan object
-      const selectedJurusan = jurusanOptions.find(
-        (jurusan) => jurusan.nama_jurusan === userData.jurusan
-      );
-
-      // If the jurusan is found, update the jurusan_id
-      if (selectedJurusan) {
-        updatedFields.jurusan_id = selectedJurusan.id;
-      }
-    }
-
-    if (userData.kelas !== "") {
-      updatedFields.kelas = userData.kelas;
-    }
-
-    if (userData.motto !== "") {
-      updatedFields.motto = userData.motto;
+    if (userData.alamat !== "") {
+      updatedFields.alamat = userData.alamat;
     }
 
     if (userData.nama_user !== "") {
       updatedFields.nama_user = userData.nama_user;
     }
+    if (userData.telepon !== "") {
+      updatedFields.telepon = userData.telepon;
+    }
 
     try {
-
-      const { data: existingStaffData, error: existingStaffError } =
-        await supabase
-          .from("staffs")
-          .select("*")
-          .eq("email", userEmail)
-          .single();
-
-      const { data: existingProfileData, error: existingProfileError } =
-        await supabase
-          .from("profiles")
-          .select("*")
-          .eq("email", userEmail)
-          .single();
-
-      if (existingStaffError || existingProfileError) {
-        console.error(
-          "Error checking existing staff or profile:",
-          existingStaffError?.message || existingProfileError?.message
-        );
-      }
-
-      if (existingStaffData || existingProfileData) {
-        console.log(
-          'Email sudah ada di tabel "staffs" atau "profiles", redirect ke /editstaff atau /edit'
-        );
-        // Redirect ke halaman yang sesuai
-        router.push(existingStaffData ? "/editstaff" : "/edit");
-        return;
-      }
-
       const { data: existingUserData, error: existingUserError } =
         await supabase
           .from("profiles")
@@ -395,65 +304,105 @@ export default function EditProfile() {
   return (
     <>
       {/* <User/> */}
-      <UserAuth/>
+      <UserAuth />
       <div className="pb-96">
-      <div className="card w-96 bg-base-100 shadow-xl mx-auto ">
-        <div className="card-body">
-          <div className="relative w-3 h-3">
-            <FontAwesomeIcon
-              icon={faBackward}
-              className="text-green-600 cursor-pointer"
-              onClick={() => router.push("/me")}
-            />
-          </div>
-          <h2 className="card-title mx-auto">
-            Edit Profile <FontAwesomeIcon icon={faPenToSquare} />
-          </h2>
-          <hr />  
-
-          <div className="card w-full h-32 mx-auto bg-gradient-to-r from-indigo-700  via-blue-500 v to-cyan-400  mb-8">
-            <p className="font-bold text-2xl mt-8  text-sky-300 text-center">Pena Guru</p>
-            <div className="avatar item-center justify-center text-center">
-              <div class="avatar placeholder ">
-                <div class="bg-blue-700 text-white rounded-full w-24">
-                  <span class="text-4xl">U</span>
-                </div>
-              </div>
+        <div className="card w-96 bg-base-100 shadow-xl mx-auto ">
+          <div className="card-body">
+            <div className="relative w-3 h-3">
+              <FontAwesomeIcon
+                icon={faBackward}
+                className="text-green-600 cursor-pointer"
+                onClick={() => router.push("/me")}
+              />
             </div>
-          </div>
+            <h2 className="card-title mx-auto">
+              Edit Profile <FontAwesomeIcon icon={faPenToSquare} />
+            </h2>
+            <hr />
 
-          <p className="text-center">{userEmail}</p>
-          <div className="card-actions justify-end">
-            <form onSubmit={handleFormSubmit}>
-              <h1>Nama User:</h1>
-              <input
-                type="text"
-                name="nama_user"
-                value={userData.nama_user}
-                onChange={handleInputChange}
-                className="input input-bordered w-full max-w-xs"
-              />
-              <h1>Motto Hidup</h1>
-              <input
-                type="text"
-                name="motto"
-                value={userData.motto}
-                onChange={handleInputChange}
-                className="input input-bordered w-full max-w-xs"
-              />
-              <Button
-                color="danger"
-                className=" mt-4 w-full"
-                variant="solid"
-                type="submit"
+            <div className="card w-full h-32 mx-auto bg-gradient-to-r from-indigo-700  via-blue-500 v to-cyan-400  ">
+              <p className="font-bold text-2xl mt-8  text-sky-300 text-center">
+                Pena Guru
+              </p>
+              {userData.avatar ? (
+                <>
+                  <div className="avatar item-center justify-center text-center">
+                    <div class="avatar placeholder ">
+                      <div class="bg-blue-700 text-white rounded-full w-24">
+                        <img src={avatarUrl} alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="avatar item-center justify-center text-center">
+                    <div class="avatar placeholder ">
+                      <div class="bg-blue-700 text-white rounded-full w-24">
+                        <span className="text-4xl">U</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+            <input
+              type="file"
+              name="avatar"
+              onChange={handleAvatarChange}
+              className="hidden"
+              id="avatar"
+            />
+
+            <p className="mt-2 text-blue-600 text-end">
+              <label
+                htmlFor="avatar"
+                className="cursor-pointer rounded-md text-sm text-center"
               >
-                Simpan Perubahan
-              </Button>
-            </form>
+                Ubah Avatar
+              </label>
+            </p>
+            <p className="text-center">{userEmail}</p>
+            <div className="card-actions justify-end">
+              <form onSubmit={handleFormSubmit}>
+                <h1>Nama User:</h1>
+                <input
+                  type="text"
+                  name="nama_user"
+                  value={userData.nama_user}
+                  onChange={handleInputChange}
+                  className="input input-bordered w-full max-w-xs"
+                />
+                <h1 className="mt-1">Tempat Tinggal</h1>
+                <input
+                  type="text"
+                  name="alamat"
+                  value={userData.alamat}
+                  onChange={handleInputChange}
+                  className="input input-bordered w-full max-w-xs"
+                />
+                <h1 className="mt-1">Telepon</h1>
+                <input
+                  type="text"
+                  placeholder="+62"
+                  name="telepon"
+                  value={userData.telepon}
+                  onChange={handleInputChange}
+                  className="input input-bordered w-full max-w-xs"
+                />
+                <Button
+                  color="danger"
+                  className=" mt-4 w-full"
+                  variant="solid"
+                  type="submit"
+                >
+                  Simpan Perubahan
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import Header from "./components/Navbar/Header";
+import Footer from "./components/Navbar/Footer";
 import Head from "next/head";
 const inter = Inter({ subsets: ["latin"] });
 import BottomNavigation from "./components/Mobile/BotNav";
@@ -40,7 +41,8 @@ export default function RootLayout({ children }) {
 
           {children}
           {/* </AuthUser> */}
-          <BottomNavigation className="pb-16"/>
+          <Footer/>
+          {/* <BottomNavigation className="pb-16"/> */}
         </Providers>
       </body>
     </html>
