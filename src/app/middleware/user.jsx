@@ -4,6 +4,30 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../config/supabase.js";
 
+const GuruAuth = ({ children }) => {
+  const router = useRouter();
+const [userEmail,setUserEmail] =useState(null)
+  useEffect(() => {
+    const checkAdminAccess = async () => {
+        try {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          setUserEmail(user.email);
+if(!user){
+    router.push("/login")
+}else{
+    console.log("sudah ada akun ")
+}
+    checkAdminAccess();
+  }
+  catch (error) {
+    console.error("Error checking user", error.message);
+    setIsAdmin(false);
+    router.push("/");
+  }
+}
+}, [router]);
 const UserAuth = ({ children }) => {
   const [user, setUser] = useState(null);
   const [getLogins, setGetLogin] = useState(null);
@@ -36,4 +60,5 @@ const UserAuth = ({ children }) => {
   return <>{children}</>;
 };
 
+export default GuruAuth;
 export default UserAuth;
